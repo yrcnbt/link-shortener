@@ -14,11 +14,11 @@ public class LinkInfoServiceInfo implements LinkInfoService {
 
     @Value("${link-length}")
     private Integer linkLength;
+    private final Map<String, CreateLinkInfoRequest> resultMap = new HashMap<>();
 
     @Override
-    public String getShortLink(final CreateLinkInfoRequest request) {
-        final String linkShort = RandomStringUtils.randomAlphabetic(linkLength);
-        final Map<String, CreateLinkInfoRequest> resultMap = new HashMap<>();
+    public String getShortLink(CreateLinkInfoRequest request) {
+        String linkShort = RandomStringUtils.randomAlphabetic(linkLength);
         resultMap.put(linkShort, request);
         return linkShort;
     }
