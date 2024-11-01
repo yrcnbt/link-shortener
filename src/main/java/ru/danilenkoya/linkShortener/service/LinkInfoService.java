@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface LinkInfoService {
 
-    LinkInfoResponse getShortLink(CreateLinkInfoRequest request);
+    LinkInfoResponse createShortLink(CreateLinkInfoRequest request);
 
     LinkInfoResponse findByShortLink(String shortLink);
 

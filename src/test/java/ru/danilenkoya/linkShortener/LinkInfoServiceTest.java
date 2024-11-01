@@ -1,9 +1,7 @@
 package ru.danilenkoya.linkShortener;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,16 +11,14 @@ import org.springframework.test.context.TestPropertySource;
 import ru.danilenkoya.linkShortener.dto.CreateLinkInfoRequest;
 import ru.danilenkoya.linkShortener.dto.LinkInfoResponse;
 import ru.danilenkoya.linkShortener.exception.NotFoundException;
-import ru.danilenkoya.linkShortener.mapper.LinkInfoMapper;
-import ru.danilenkoya.linkShortener.mapper.LinkInfoToLinkInfoResponseMapper;
 import ru.danilenkoya.linkShortener.model.LinkInfo;
 import ru.danilenkoya.linkShortener.repository.LinkInfoRepository;
 import ru.danilenkoya.linkShortener.service.LinkInfoService;
-import ru.danilenkoya.linkShortener.service.impl.LinkInfoServiceImpl;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
-import static org.mockito.Mockito.mock;
+
 
 @SpringBootTest
 @TestPropertySource("classpath:application-test.yml")
@@ -34,13 +30,14 @@ public class LinkInfoServiceTest {
     private LinkInfoRepository linkInfoRepository;
     @Autowired
     private LinkInfoService linkInfoService;
+    private static final String FULL_LINK = "thisIsFullLink!!!!";
 
     @Test
     void when_createShortLinkHappy() {
-        LinkInfo linkInfo = getLinkInfo();
+        LinkInfo linkInfo = getLinkInfo().get();
         Mockito.when(linkInfoRepository.save(Mockito.any(LinkInfo.class))).thenReturn(linkInfo);
 
-        LinkInfoResponse result = linkInfoService.getShortLink(getCreateLinkInfoRequest());
+        LinkInfoResponse result = linkInfoService.createShortLink(getCreateLinkInfoRequest());
         Assertions.assertNotNull(result);
         Assertions.assertEquals(linkLength, result.getShortLink().length());
         Assertions.assertEquals(getLinkInfoResponse().getLink(), result.getLink());
@@ -57,7 +54,7 @@ public class LinkInfoServiceTest {
 
     @Test
     void when_findByShortLinkNotFound() {
-        Mockito.when(linkInfoRepository.findByShortLink("nonExistentShortLink")).thenReturn(null);
+        Mockito.when(linkInfoRepository.findByShortLink("nonExistentShortLink")).thenReturn(Optional.empty());
 
         NotFoundException exception = Assertions.assertThrows(
                 NotFoundException.class,
@@ -72,19 +69,19 @@ public class LinkInfoServiceTest {
         return LocalDateTime.now().plusYears(1);
     }
 
-    LinkInfo getLinkInfo() {
-        return LinkInfo.builder()
+    Optional<LinkInfo> getLinkInfo() {
+        return Optional.of(LinkInfo.builder()
                 .shortLink("shortlk")
-                .link(getFullString())
+                .link(FULL_LINK)
                 .endTime(getEndTime())
                 .description("This is link!!!")
                 .active(true)
-                .build();
+                .build());
     }
 
     CreateLinkInfoRequest getCreateLinkInfoRequest() {
         return CreateLinkInfoRequest.builder()
-                .link(getFullString())
+                .link(FULL_LINK)
                 .active(true)
                 .endTime(getEndTime())
                 .description("This is link!!!")
@@ -94,15 +91,11 @@ public class LinkInfoServiceTest {
     LinkInfoResponse getLinkInfoResponse() {
         return LinkInfoResponse.builder()
                 .shortLink("shortlk")
-                .link(getFullString())
+                .link(FULL_LINK)
                 .endTime(getEndTime())
                 .description("This is link!!!")
                 .active(true)
                 .build();
-    }
-
-    String getFullString() {
-        return "thisIsFullLink!!!!";
     }
 
 }
