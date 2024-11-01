@@ -13,7 +13,6 @@ import ru.danilenkoya.linkShortener.repository.LinkInfoRepository;
 import ru.danilenkoya.linkShortener.service.LinkInfoService;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -39,9 +38,10 @@ public class LinkInfoServiceImpl implements LinkInfoService {
      */
     @Override
     public LinkInfoResponse findByShortLink(String shortLink) {
-        Optional<LinkInfo> linkInfo = linkInfoRepository.findByShortLink(shortLink);
+      LinkInfo linkInfo = linkInfoRepository.findByShortLink(shortLink)
+                .orElseThrow(() -> new NotFoundException("Not found LinkInfo by shortLink: " + shortLink));
         return linkInfoMapper
-                .toLinkInfoResponse(linkInfo.orElseThrow(() -> new NotFoundException("Not found LinkInfo")));
+                .toLinkInfoResponse(linkInfo);
     }
 
     /**

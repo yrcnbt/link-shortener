@@ -24,13 +24,13 @@ import java.util.Optional;
 @TestPropertySource("classpath:application-test.yml")
 public class LinkInfoServiceTest {
 
+    private static final String FULL_LINK = "thisIsFullLink!!!!";
     @Value("${link-shortener.link-length}")
     private Integer linkLength;
     @MockBean
     private LinkInfoRepository linkInfoRepository;
     @Autowired
     private LinkInfoService linkInfoService;
-    private static final String FULL_LINK = "thisIsFullLink!!!!";
 
     @Test
     void when_createShortLinkHappy() {
