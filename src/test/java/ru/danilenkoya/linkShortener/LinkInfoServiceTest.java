@@ -60,7 +60,7 @@ public class LinkInfoServiceTest {
                 NotFoundException.class,
                 () -> linkInfoService.findByShortLink("nonExistentShortLink")
         );
-        Assertions.assertEquals("Not found LinkInfo", exception.getMessage());
+        Assertions.assertEquals("Not found LinkInfo by shortLink: nonExistentShortLink", exception.getMessage());
     }
 
 
