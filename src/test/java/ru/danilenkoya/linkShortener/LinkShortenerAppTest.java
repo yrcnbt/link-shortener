@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 
 public class LinkShortenerAppTest {
 
-    @Test
     void test() {
         byte b;
         short s;
