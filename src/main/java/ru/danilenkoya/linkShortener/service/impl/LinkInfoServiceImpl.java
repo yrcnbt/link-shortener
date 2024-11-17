@@ -14,6 +14,8 @@ import ru.danilenkoya.linkShortener.repository.LinkInfoRepository;
 import ru.danilenkoya.linkShortener.service.LinkInfoService;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -61,5 +63,14 @@ public class LinkInfoServiceImpl implements LinkInfoService {
         return null;
     }
 
-
+    /**
+     * @param id идентификатор ссылки
+     * @return инфа об удаленной ссылке
+     */
+    @Override
+    public LinkInfo removeShortLink(UUID id) {
+        Map<UUID, String> shortLinkMap = linkInfoRepository.findAll().stream()
+                .collect(Collectors.toMap(LinkInfo::getId, LinkInfo::getShortLink));
+        return linkInfoRepository.remove(shortLinkMap.get(id));
+    }
 }

@@ -12,4 +12,6 @@ public interface LinkInfoRepository {
     LinkInfo save(LinkInfo linkInfo);
 
     List<LinkInfo> findAll();
+
+    LinkInfo remove(String shortLink);
 }

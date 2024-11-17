@@ -39,4 +39,14 @@ public class LinkInfoRepositoryImpl implements LinkInfoRepository {
     public List<LinkInfo> findAll() {
         return new ArrayList<>(linksCahce.values());
     }
+
+    /**
+     * @return
+     */
+    @Override
+    public LinkInfo remove(String shortLink) {
+        return linksCahce.remove(shortLink);
+    }
+
+
 }
