@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.danilenkoya.linkShortener.config.LinkInfoProperty;
 import ru.danilenkoya.linkShortener.dto.CreateLinkInfoRequest;
 import ru.danilenkoya.linkShortener.dto.LinkInfoResponse;
 import ru.danilenkoya.linkShortener.exception.NotFoundException;
@@ -19,16 +20,14 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class LinkInfoServiceImpl implements LinkInfoService {
-
-    @Value("${link-shortener.link-length}")
-    private Integer linkLength;
+    private final LinkInfoProperty linkInfoProperty;
     private final LinkInfoRepository linkInfoRepository;
     private final LinkInfoMapper linkInfoMapper;
 
     @Override
     public LinkInfoResponse createShortLink(CreateLinkInfoRequest request) {
         LinkInfo linkInfo = linkInfoMapper.toLinkInfo(request);
-        linkInfo.setShortLink(RandomStringUtils.randomAlphabetic(linkLength));
+        linkInfo.setShortLink(RandomStringUtils.randomAlphabetic(linkInfoProperty.getLinkLength()));
         return linkInfoMapper.toLinkInfoResponse(linkInfoRepository.save(linkInfo));
     }
 
