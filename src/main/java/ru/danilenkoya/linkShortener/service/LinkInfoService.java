@@ -2,6 +2,7 @@ package ru.danilenkoya.linkShortener.service;
 
 import ru.danilenkoya.linkShortener.dto.CreateLinkInfoRequest;
 import ru.danilenkoya.linkShortener.dto.LinkInfoResponse;
+import ru.danilenkoya.linkShortener.dto.UpdateLinkInfoRequest;
 import ru.danilenkoya.linkShortener.model.LinkInfo;
 
 import java.util.List;
@@ -17,5 +18,7 @@ public interface LinkInfoService {
 
     List<LinkInfoResponse> findByFilter();
 
-    LinkInfo removeShortLink(UUID id);
+    LinkInfo deleteById(UUID id);
+
+    LinkInfoResponse updateLinkInfo(UpdateLinkInfoRequest request);
 }

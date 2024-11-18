@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.danilenkoya.linkShortener.config.LinkInfoProperty;
 import ru.danilenkoya.linkShortener.dto.CreateLinkInfoRequest;
 import ru.danilenkoya.linkShortener.dto.LinkInfoResponse;
+import ru.danilenkoya.linkShortener.dto.UpdateLinkInfoRequest;
 import ru.danilenkoya.linkShortener.exception.NotFoundException;
 import ru.danilenkoya.linkShortener.mapper.LinkInfoMapper;
 import ru.danilenkoya.linkShortener.model.LinkInfo;
@@ -68,9 +69,16 @@ public class LinkInfoServiceImpl implements LinkInfoService {
      * @return инфа об удаленной ссылке
      */
     @Override
-    public LinkInfo removeShortLink(UUID id) {
-        Map<UUID, String> shortLinkMap = linkInfoRepository.findAll().stream()
-                .collect(Collectors.toMap(LinkInfo::getId, LinkInfo::getShortLink));
-        return linkInfoRepository.remove(shortLinkMap.get(id));
+    public LinkInfo deleteById(UUID id) {
+        return linkInfoRepository.deleteById(id);
+    }
+
+    /**
+     * @param request
+     * @return обновленная инфа о ссылке
+     */
+    @Override
+    public LinkInfoResponse updateLinkInfo(UpdateLinkInfoRequest request) {
+      return linkInfoMapper.toLinkInfoResponse(linkInfoRepository.update(linkInfoMapper.toLinkInfo(request)));
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import ru.danilenkoya.linkShortener.dto.CreateLinkInfoRequest;
 import ru.danilenkoya.linkShortener.dto.LinkInfoResponse;
+import ru.danilenkoya.linkShortener.dto.UpdateLinkInfoRequest;
 import ru.danilenkoya.linkShortener.exception.NotFoundException;
 import ru.danilenkoya.linkShortener.model.LinkInfo;
 import ru.danilenkoya.linkShortener.repository.LinkInfoRepository;
