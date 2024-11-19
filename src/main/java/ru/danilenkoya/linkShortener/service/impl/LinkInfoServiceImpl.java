@@ -14,6 +14,7 @@ import ru.danilenkoya.linkShortener.repository.LinkInfoRepository;
 import ru.danilenkoya.linkShortener.service.LinkInfoService;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -78,10 +79,16 @@ public class LinkInfoServiceImpl implements LinkInfoService {
     @Override
     public LinkInfoResponse updateLinkInfo(UpdateLinkInfoRequest request) {
         LinkInfo oldLinkInfo = linkInfoRepository.findById(request.getId());
-        oldLinkInfo.setLink(request.getLink());
-        oldLinkInfo.setActive(request.getActive());
+        if (Objects.nonNull(request.getLink())) {
+            oldLinkInfo.setLink(request.getLink());
+        }
+        if (Objects.nonNull(request.getActive())) {
+            oldLinkInfo.setActive(request.getActive());
+        }
+        if (Objects.nonNull(request.getDescription())) {
+            oldLinkInfo.setDescription(request.getDescription());
+        }
         oldLinkInfo.setEndTime(request.getEndTime());
-        oldLinkInfo.setDescription(request.getDescription());
       return linkInfoMapper.toLinkInfoResponse(linkInfoRepository.save(oldLinkInfo));
     }
 }
