@@ -2,10 +2,11 @@ package ru.danilenkoya.linkShortener.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.danilenkoya.linkShortener.config.LinkInfoProperty;
 import ru.danilenkoya.linkShortener.dto.CreateLinkInfoRequest;
 import ru.danilenkoya.linkShortener.dto.LinkInfoResponse;
+import ru.danilenkoya.linkShortener.dto.UpdateLinkInfoRequest;
 import ru.danilenkoya.linkShortener.exception.NotFoundException;
 import ru.danilenkoya.linkShortener.mapper.LinkInfoMapper;
 import ru.danilenkoya.linkShortener.model.LinkInfo;
@@ -13,22 +14,22 @@ import ru.danilenkoya.linkShortener.repository.LinkInfoRepository;
 import ru.danilenkoya.linkShortener.service.LinkInfoService;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
 @Service
 @RequiredArgsConstructor
 public class LinkInfoServiceImpl implements LinkInfoService {
-
-    @Value("${link-shortener.link-length}")
-    private Integer linkLength;
+    private final LinkInfoProperty linkInfoProperty;
     private final LinkInfoRepository linkInfoRepository;
     private final LinkInfoMapper linkInfoMapper;
 
     @Override
     public LinkInfoResponse createShortLink(CreateLinkInfoRequest request) {
         LinkInfo linkInfo = linkInfoMapper.toLinkInfo(request);
-        linkInfo.setShortLink(RandomStringUtils.randomAlphabetic(linkLength));
+        linkInfo.setShortLink(RandomStringUtils.randomAlphabetic(linkInfoProperty.getLinkLength()));
         return linkInfoMapper.toLinkInfoResponse(linkInfoRepository.save(linkInfo));
     }
 
@@ -62,5 +63,32 @@ public class LinkInfoServiceImpl implements LinkInfoService {
         return null;
     }
 
+    /**
+     * @param id идентификатор ссылки
+     * @return инфа об удаленной ссылке
+     */
+    @Override
+    public LinkInfo deleteById(UUID id) {
+        return linkInfoRepository.deleteById(id);
+    }
 
+    /**
+     * @param request
+     * @return обновленная инфа о ссылке
+     */
+    @Override
+    public LinkInfoResponse updateLinkInfo(UpdateLinkInfoRequest request) {
+        LinkInfo oldLinkInfo = linkInfoRepository.findById(request.getId());
+        if (Objects.nonNull(request.getLink())) {
+            oldLinkInfo.setLink(request.getLink());
+        }
+        if (Objects.nonNull(request.getActive())) {
+            oldLinkInfo.setActive(request.getActive());
+        }
+        if (Objects.nonNull(request.getDescription())) {
+            oldLinkInfo.setDescription(request.getDescription());
+        }
+        oldLinkInfo.setEndTime(request.getEndTime());
+      return linkInfoMapper.toLinkInfoResponse(linkInfoRepository.save(oldLinkInfo));
+    }
 }

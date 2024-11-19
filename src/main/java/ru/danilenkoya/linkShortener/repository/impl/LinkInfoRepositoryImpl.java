@@ -6,12 +6,12 @@ import ru.danilenkoya.linkShortener.repository.LinkInfoRepository;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Repository
 public class LinkInfoRepositoryImpl implements LinkInfoRepository {
 
     private final Map<String, LinkInfo> linksCahce = new ConcurrentHashMap<>();
-
     /**
      * @param shortLink возвращает информацию о ссылке по короткой ссылке
      * @return
@@ -27,7 +27,9 @@ public class LinkInfoRepositoryImpl implements LinkInfoRepository {
      */
     @Override
     public LinkInfo save(LinkInfo linkInfo) {
-        linkInfo.setId(UUID.randomUUID());
+        if (Objects.isNull(linkInfo.getId())) {
+            linkInfo.setId(UUID.randomUUID());
+        }
         linksCahce.put(linkInfo.getShortLink(), linkInfo);
         return linkInfo;
     }
@@ -38,5 +40,22 @@ public class LinkInfoRepositoryImpl implements LinkInfoRepository {
     @Override
     public List<LinkInfo> findAll() {
         return new ArrayList<>(linksCahce.values());
+    }
+
+    @Override
+    public LinkInfo remove(String shortLink) {
+        return linksCahce.remove(shortLink);
+    }
+
+    @Override
+    public LinkInfo findById(UUID id) {
+        Map<UUID, LinkInfo> shortLinkMap = linksCahce.values().stream()
+                .collect(Collectors.toMap(LinkInfo::getId, linkInfo -> linkInfo));
+        return shortLinkMap.get(id);
+    }
+
+    @Override
+    public LinkInfo deleteById(UUID id) {
+        return remove(findById(id).getShortLink());
     }
 }

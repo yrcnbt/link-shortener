@@ -14,4 +14,5 @@ public interface LinkInfoMapper {
     LinkInfo toLinkInfo(CreateLinkInfoRequest source);
 
     LinkInfoResponse toLinkInfoResponse(LinkInfo linkInfo);
+
 }
