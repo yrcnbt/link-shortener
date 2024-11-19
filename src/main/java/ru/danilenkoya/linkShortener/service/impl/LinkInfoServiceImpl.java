@@ -2,7 +2,6 @@ package ru.danilenkoya.linkShortener.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.danilenkoya.linkShortener.config.LinkInfoProperty;
 import ru.danilenkoya.linkShortener.dto.CreateLinkInfoRequest;
@@ -15,7 +14,6 @@ import ru.danilenkoya.linkShortener.repository.LinkInfoRepository;
 import ru.danilenkoya.linkShortener.service.LinkInfoService;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -79,6 +77,11 @@ public class LinkInfoServiceImpl implements LinkInfoService {
      */
     @Override
     public LinkInfoResponse updateLinkInfo(UpdateLinkInfoRequest request) {
-      return linkInfoMapper.toLinkInfoResponse(linkInfoRepository.update(linkInfoMapper.toLinkInfo(request)));
+        LinkInfo oldLinkInfo = linkInfoRepository.findById(request.getId());
+        oldLinkInfo.setLink(request.getLink());
+        oldLinkInfo.setActive(request.getActive());
+        oldLinkInfo.setEndTime(request.getEndTime());
+        oldLinkInfo.setDescription(request.getDescription());
+      return linkInfoMapper.toLinkInfoResponse(linkInfoRepository.save(oldLinkInfo));
     }
 }

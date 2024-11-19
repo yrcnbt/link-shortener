@@ -20,5 +20,4 @@ public interface LinkInfoRepository {
 
     LinkInfo deleteById(UUID id);
 
-    LinkInfo update(LinkInfo linkInfo);
 }
