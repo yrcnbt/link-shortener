@@ -1,2 +1,4 @@
 link-shortener:
   link-length: ${LINK_LENGTH:7}
+  logging:
+    enabled-log-execution-time: true
