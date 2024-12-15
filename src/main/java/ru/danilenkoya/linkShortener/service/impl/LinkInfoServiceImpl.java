@@ -12,6 +12,7 @@ import ru.danilenkoya.linkShortener.exception.NotFoundException;
 import ru.danilenkoya.linkShortener.mapper.LinkInfoMapper;
 import ru.danilenkoya.linkShortener.model.LinkInfo;
 import ru.danilenkoya.linkShortener.repository.LinkInfoRepository;
+import ru.danilenkoya.linkShortener.repository.impl.LinkInfoRepositoryImpl;
 import ru.danilenkoya.linkShortener.service.LinkInfoService;
 
 import java.util.List;
@@ -22,10 +23,11 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class LinkInfoServiceImpl implements LinkInfoService {
+public class LinkInfoServiceImpl implements LinkInfoService  {
     private final LinkInfoProperty linkInfoProperty;
     private final LinkInfoRepository linkInfoRepository;
     private final LinkInfoMapper linkInfoMapper;
+
 
     @Override
     @LogExecutionTime

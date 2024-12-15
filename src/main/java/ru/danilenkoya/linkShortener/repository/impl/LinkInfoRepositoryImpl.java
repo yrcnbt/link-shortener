@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @Repository
 public class LinkInfoRepositoryImpl implements LinkInfoRepository {
 
-    private final Map<String, LinkInfo> linksCahce = new ConcurrentHashMap<>();
+    protected final Map<String, LinkInfo> linksCahce = new ConcurrentHashMap<>();
     /**
      * @param shortLink возвращает информацию о ссылке по короткой ссылке
      * @return
