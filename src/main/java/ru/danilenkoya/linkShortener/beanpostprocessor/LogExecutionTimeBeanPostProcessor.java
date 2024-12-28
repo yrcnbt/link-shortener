@@ -5,6 +5,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import ru.danilenkoya.linkShortener.annotation.LogExecutionTime;
 
@@ -17,7 +18,7 @@ import java.util.Map;
 
 @Component
 @Slf4j
-@ConditionalOnProperty(prefix = "link-shortener.logging", value = "enabled-log-execution-time", havingValue = "true")
+@Profile("log-exec-time")
 public class LogExecutionTimeBeanPostProcessor implements BeanPostProcessor {
 
     private final Map<String, BeanMethodsData> beanMethodsDataByBeanName = new HashMap<>();

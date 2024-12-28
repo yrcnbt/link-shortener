@@ -8,13 +8,14 @@ import ru.danilenkoya.linkShortener.config.LinkInfoProperty;
 import ru.danilenkoya.linkShortener.dto.CreateLinkInfoRequest;
 import ru.danilenkoya.linkShortener.dto.LinkInfoResponse;
 import ru.danilenkoya.linkShortener.dto.UpdateLinkInfoRequest;
+import ru.danilenkoya.linkShortener.exception.LinkShortenerException;
 import ru.danilenkoya.linkShortener.exception.NotFoundException;
 import ru.danilenkoya.linkShortener.mapper.LinkInfoMapper;
 import ru.danilenkoya.linkShortener.model.LinkInfo;
 import ru.danilenkoya.linkShortener.repository.LinkInfoRepository;
-import ru.danilenkoya.linkShortener.repository.impl.LinkInfoRepositoryImpl;
 import ru.danilenkoya.linkShortener.service.LinkInfoService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -46,8 +47,12 @@ public class LinkInfoServiceImpl implements LinkInfoService  {
     public LinkInfoResponse findByShortLink(String shortLink) {
       LinkInfo linkInfo = linkInfoRepository.findByShortLink(shortLink)
                 .orElseThrow(() -> new NotFoundException("Not found LinkInfo by shortLink: " + shortLink));
-        return linkInfoMapper
-                .toLinkInfoResponse(linkInfo);
+        if(linkInfo.getActive() && LocalDateTime.now().isBefore(linkInfo.getEndTime())) {
+            return linkInfoMapper
+                    .toLinkInfoResponse(linkInfo);
+        } else {
+            throw new LinkShortenerException("Короткая ссылка " + shortLink + " не активна или у нее истек срок действия");
+        }
     }
 
     /**
@@ -66,8 +71,11 @@ public class LinkInfoServiceImpl implements LinkInfoService  {
      */
     @Override
     @LogExecutionTime
-    public List<LinkInfoResponse> findByFilter() {
-        return null;
+    public List<LinkInfoResponse> findByFilter(String description) {
+        return linkInfoRepository.findAll().stream()
+                .filter(linkInfo -> description.equals(linkInfo.getDescription()))
+                .map(linkInfoMapper::toLinkInfoResponse)
+                .toList();
     }
 
     /**
@@ -76,8 +84,9 @@ public class LinkInfoServiceImpl implements LinkInfoService  {
      */
     @Override
     @LogExecutionTime
-    public LinkInfo deleteById(UUID id) {
-        return linkInfoRepository.deleteById(id);
+    public LinkInfoResponse deleteById(UUID id) {
+        return linkInfoMapper
+                .toLinkInfoResponse(linkInfoRepository.deleteById(id)) ;
     }
 
     /**
@@ -100,4 +109,6 @@ public class LinkInfoServiceImpl implements LinkInfoService  {
         oldLinkInfo.setEndTime(request.getEndTime());
       return linkInfoMapper.toLinkInfoResponse(linkInfoRepository.save(oldLinkInfo));
     }
+
+
 }

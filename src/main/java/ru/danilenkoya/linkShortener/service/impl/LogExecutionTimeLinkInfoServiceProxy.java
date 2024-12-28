@@ -57,11 +57,11 @@ public class LogExecutionTimeLinkInfoServiceProxy implements LinkInfoService {
     }
 
     @Override
-    public List<LinkInfoResponse> findByFilter() {
+    public List<LinkInfoResponse> findByFilter(String description) {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         try {
-            return linkInfoService.findByFilter();
+            return linkInfoService.findByFilter(description);
         } finally {
             stopWatch.stop();
             log.info("Время выполнения метода findByFilter : " + stopWatch.getTotalTimeMillis());
@@ -69,7 +69,7 @@ public class LogExecutionTimeLinkInfoServiceProxy implements LinkInfoService {
     }
 
     @Override
-    public LinkInfo deleteById(UUID id) {
+    public LinkInfoResponse deleteById(UUID id) {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         try {

@@ -17,9 +17,9 @@ public interface LinkInfoService {
 
     List<LinkInfoResponse> findAll();
 
-    List<LinkInfoResponse> findByFilter();
+    List<LinkInfoResponse> findByFilter(String description);
 
-    LinkInfo deleteById(UUID id);
+    LinkInfoResponse deleteById(UUID id);
 
     LinkInfoResponse updateLinkInfo(UpdateLinkInfoRequest request);
 

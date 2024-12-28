@@ -1,4 +1,22 @@
+server:
+  port: ${LINK_SHORTENER_PORT:7777}
+  servlet:
+    context-path: /${spring.application.name}
+
 link-shortener:
   link-length: ${LINK_LENGTH:7}
   logging:
     enabled-log-execution-time: true
+
+spring:
+  profiles:
+    active: log-exec-time
+  application:
+    name: link-shortener
+logging:
+  level:
+    web: debug
+
+management:
+  endpoints:
+    enabled-by-default: true

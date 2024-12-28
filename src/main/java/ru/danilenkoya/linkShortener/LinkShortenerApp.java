@@ -9,7 +9,6 @@ import ru.danilenkoya.loggingstarter.LoggingStarterAutoConfiguration;
 public class LinkShortenerApp {
 
     public static void main(String[] args) {
-        LoggingStarterAutoConfiguration.println("hello");
         SpringApplication.run(LinkShortenerApp.class, args);
     }
 }
